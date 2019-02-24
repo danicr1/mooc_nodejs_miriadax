@@ -21,12 +21,14 @@ console.log(Math.PI.toFixed(6));
 console.log();
 
 // 6) Tabla del 0 a 22 en decimal, hexadecimal, octal y binario
-const changeNumberBase = n => {
+const changeNumberBase = (n) => {
   const dec = n;
   const hex = n.toString(16);
   const oct = n.toString(8);
   const bin = n.toString(2);
-  return { dec, hex, oct, bin };
+  return {
+    dec, hex, oct, bin,
+  };
 };
 
 for (let index = 0; index < 23; index++) {
@@ -50,7 +52,7 @@ for (let index = 0; index < 23; index++) {
 console.log();
 
 // 10) Frase en chino
-const chino = `Hi in Chinese is written as: \u55e8\uff0c\u4f60\u597d\u5417`;
+const chino = 'Hi in Chinese is written as: \u55e8\uff0c\u4f60\u597d\u5417';
 console.log(chino);
 
 console.log();
