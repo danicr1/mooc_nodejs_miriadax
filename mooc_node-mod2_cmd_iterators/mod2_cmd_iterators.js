@@ -17,7 +17,6 @@ for (let index = 0; index < param.length; index++) {
     paramToRemove.push(param[index]); // Lo añadimos a la lista negra
   }
 }
-console.log(paramToRemove);
 
 // Array ya sin los elementos precedidos de "-r"
 const cleanArray = param.reduce((acc, elem) => {
@@ -27,23 +26,19 @@ const cleanArray = param.reduce((acc, elem) => {
   return acc;
 }, []);
 
-console.log(cleanArray);
-console.log(cleanArray.sort());
-
-
 // Primero el array se ordena alfabéticamente, con los elementos iguales consecutivos
 // Después se usa reduce para iterar e imprimir los elementos
 cleanArray.sort().reduce((acc, ele, index, array) => {
   if (index > 0) { // Si no es el primer elemento
     if (ele === array[index - 1]) {
       acc += 1;
-      if (index === array.length - 1) { // Si es el último hay que imprimir lo que haya
+      if (index === array.length - 1) { // Si es el último se imprime lo que haya
         console.log(`${ele}: ${acc}`);
       }
     } else {
       console.log(`${array[index - 1]}: ${acc}`);
       acc = 1;
-      if (index === array.length - 1) { // Si es el último hay que imprimir lo que haya
+      if (index === array.length - 1) { // Si es el último se imprime lo que haya
         console.log(`${ele}: ${acc}`);
       }
     }
