@@ -307,8 +307,6 @@ exports.playCmd = rl => {
         .then(quizzes => {
             quizzesArray = quizzes;
             shuffle(quizzesArray);
-        })
-        .then(() => {
             hacerPreguntas();
         })
         .catch(error => {
