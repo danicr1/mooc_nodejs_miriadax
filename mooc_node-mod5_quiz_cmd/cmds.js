@@ -183,43 +183,6 @@ exports.testCmd = (rl, id) => {
  */
 exports.playCmd = rl => {
     let puntos = 0;
-    let quizIndex = 0;
-    let fallo = false;
-
-    let quizzes = model.getAll(); // Array que contiene todos los quizzes
-    shuffle(quizzes); // Mezclamos los quizzes
-
-    /**
-     * Función recursiva que sigue haciendo preguntas mientras no falles
-     * la respuesta y sigan quedando preguntas por responder.
-    */
-    const hacerPreguntas = () => {
-        const quiz = quizzes[quizIndex];
-
-        if (!fallo && quizIndex < quizzes.length) { // Mientras no falle y queden preguntas
-            rl.question(`${colorize(quiz.question, 'red')} `, answer => {
-                if (answer.toLowerCase() === quiz.answer.toLowerCase()) {
-                    log(`Aciertos: ${puntos}`);
-                    log('Su respuesta es correcta');
-
-                    puntos++;
-                    quizIndex++; // Siguiente quiz
-                    hacerPreguntas();
-                } else {
-                    log('Su respuesta es incorrecta');
-                    fallo = true;
-                    log(`Aciertos: ${puntos}`);
-                    log('Fin del juego');
-                    rl.prompt();
-                }
-            });
-        } else {
-            log(`¡Enhorabuena, acertó todas las preguntas!`);
-            log(`Aciertos: ${puntos}`);
-            log('Fin del juego');
-            rl.prompt();
-        }
-    };
 
     /**
      * Función auxiliar que cambia el orden de los elementos de un array aleatoriamente.
@@ -240,6 +203,38 @@ exports.playCmd = rl => {
             array[randomIndex] = temporaryValue;
         }
     }
+
+    /**
+    * Función recursiva que sigue haciendo preguntas mientras no falles
+    * la respuesta y sigan quedando preguntas por responder.
+   */
+    const hacerPreguntas = () => {
+        if (quizzes.length > 0) { // Mientras queden preguntas
+            let quiz = quizzes[quizzes.length - 1]; // Cogemos el último elemento
+            rl.question(`${colorize(quiz.question, 'red')} `, answer => {
+                if (answer.toLowerCase() === quiz.answer.toLowerCase()) {
+                    puntos++;
+                    log('Su respuesta es correcta');
+                    log(`Aciertos: ${puntos}`);
+                    quizzes.pop(); // Eliminamos el quiz que hemos acertado (el último)
+                    hacerPreguntas(); // Si acierta sigue jugando
+                } else {
+                    log('Su respuesta es incorrecta');
+                    log(`Puntuación final: ${puntos}`);
+                    log('Fin del juego');
+                    rl.prompt();
+                }
+            });
+        } else { // Si ya no quedan preguntas
+            log(`¡Enhorabuena, acertó todas las preguntas!`);
+            log(`Puntuación final: ${puntos}`);
+            log('Fin del juego');
+            rl.prompt();
+        }
+    };
+
+    let quizzes = model.getAll(); // Array que contiene todos los quizzes
+    shuffle(quizzes); // Mezclamos los quizzes
 
     hacerPreguntas();
 };
