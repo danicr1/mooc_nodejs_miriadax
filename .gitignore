@@ -1,5 +1,7 @@
 # Entregas
 *.zip
+img
+video
 
 # Logs
 logs
