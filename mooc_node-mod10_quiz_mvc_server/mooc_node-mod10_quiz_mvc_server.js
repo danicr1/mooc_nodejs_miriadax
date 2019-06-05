@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 const express = require('express');
 const app = express();
@@ -58,9 +59,9 @@ const index = (quizzes) => `<!-- HTML view -->
     (ac, quiz) => ac += 
 `       <a href="/quizzes/${quiz.id}/play">${quiz.question}</a>
         <a href="/quizzes/${quiz.id}/edit"><button>Edit</button></a>
-        <a href="/quizzes/${quiz.id}?_method=DELETE"
-           onClick="return confirm('Delete: ${quiz.question}')">
-           <button>Delete</button></a>
+        <form   method="POST"   action="/quizzes/${quiz.id}?_method=DELETE">
+            <input  type="submit" value="Delete"/>
+        </form>
         <br>\n`, 
     ""
 )
@@ -150,14 +151,22 @@ const checkController = (req, res, next) => {
 
 //  GET /quizzes/1/edit
 const editController = (req, res, next) => {
+    let id = Number(req.params.id);
 
-     // .... introducir código
+    quizzes.findById(id)
+    .then((quiz) => res.send(quizForm("Edit Quiz", "post", `/quizzes/${id}?_method=PUT`, quiz.question, quiz.answer)))
+    .catch((error) => `A DB Error has occurred:\n${error}`);
 };
 
 //  PUT /quizzes/1
 const updateController = (req, res, next) => {
+    let {question, answer} = req.body;
+    let id = Number(req.params.id);
 
-     // .... introducir código
+    quizzes.update( {question, answer}, {where: {id}})
+    .then((quiz) => res.redirect('/quizzes'))
+    .catch((error) => `Quiz not created:\n${error}`);
+
 };
 
 // GET /quizzes/new
@@ -178,8 +187,12 @@ const createController = (req, res, next) => {
 
 // DELETE /quizzes/1
 const destroyController = (req, res, next) => {
+    let id = Number(req.params.id);
 
-     // .... introducir código
+    quizzes.destroy( {where: {id}})
+    .then((quiz) => res.redirect('/quizzes'))
+    .catch((error) => `Quiz not created:\n${error}`);
+
  };
 
 
@@ -192,9 +205,9 @@ app.get('/quizzes/:id/check', checkController);
 app.get('/quizzes/new',       newController);
 app.post('/quizzes',          createController);
 
-    // ..... instalar los MWs asociados a
-    //   GET  /quizzes/:id/edit,   PUT  /quizzes/:id y  DELETE  /quizzes/:id
-
+app.get('/quizzes/:id/edit',       editController);
+app.put('/quizzes/:id',       updateController);
+app.delete('/quizzes/:id',       destroyController);
 
 app.all('*', (req, res) =>
     res.send("Error: resource not found or method not supported")
