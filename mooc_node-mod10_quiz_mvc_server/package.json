@@ -21,7 +21,7 @@
     "archiver": "^3.0.0",
     "mocha": "^5.2.0",
     "chai": "^4.1.2",
-    "sequelize": "^4.32.7",
+    "sequelize": "^5.15.1",
     "sqlite3": "^4.0.4",
     "express": "^4.0.0",
     "zombie": "^6.1.2",
